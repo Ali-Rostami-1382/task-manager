@@ -227,8 +227,6 @@ document.querySelector("#today-label").textContent = new Intl.DateTimeFormat(und
   weekday: "short", month: "short", day: "numeric"
 }).format(new Date());
 
-renderTasks();
-
 const SETTINGS_KEY = "daymark-settings";
 const PROFILE_KEY = "daymark-profile";
 const CHECKIN_KEY = "daymark-checkin";
@@ -290,3 +288,5 @@ document.querySelector("#contact-form").addEventListener("submit",e=>{e.preventD
 const demoEmployees=[{name:"Maya Chen",role:"Design",count:42},{name:"Noah Williams",role:"Engineering",count:37},{name:"Sofia Patel",role:"Operations",count:31},{name:"Leo Martin",role:"Marketing",count:26},{name:"Amir Hassan",role:"Research",count:19}];
 document.querySelector("#leaderboard-list").innerHTML=demoEmployees.map((p,i)=>'<div class="leader-row"><span class="leader-rank">'+(i+1)+'</span><div class="leader-person"><strong>'+p.name+'</strong><small>'+p.role+'</small></div><span class="leader-score">'+p.count+' tasks</span></div>').join("");
 renderProfile();applySettings();
+
+renderTasks();
