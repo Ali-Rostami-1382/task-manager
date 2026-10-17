@@ -275,7 +275,7 @@ function applySettings(){
  document.querySelector("#setting-theme").value=settings.theme;document.querySelector("#setting-compact").checked=!!settings.compact;document.querySelector("#setting-motion").checked=!!settings.motion;document.querySelector("#setting-reminder").checked=!!settings.reminder;
 }
 function showView(view){
- document.querySelectorAll("[data-section]").forEach(s=>s.classList.toggle("active-view",s.dataset.section===view));
+ document.querySelectorAll("[data-section]").forEach(s=>{const active=s.dataset.section===view;s.classList.toggle("active-view",active);s.style.display=active?"block":"none";});
  document.querySelectorAll(".section-link").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
  const names={dashboard:"Tasks",analytics:"Analytics",leaderboard:"Leaderboard",checkin:"Daily check-in",calendar:"Calendar",profile:"My profile",settings:"Settings",contact:"Contact us"};
  document.querySelector(".breadcrumb strong").textContent=names[view]||"Tasks";if(view==="calendar")renderCalendar();
