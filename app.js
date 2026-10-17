@@ -163,7 +163,9 @@ function renderTasks() {
   else if (progress > 0) progressCopy = "Keep going — you're getting there.";
   document.querySelector("#progress-copy").textContent = progressCopy;
 
-  updateAnalytics();\n  renderCalendar();\n  const titles = { all: "All tasks", active: "In progress", completed: "Completed" };
+  updateAnalytics();
+  renderCalendar();
+  const titles = { all: "All tasks", active: "In progress", completed: "Completed" };
   document.querySelector("#list-title").childNodes[0].textContent = `${titles[currentFilter]} `;
 }
 
