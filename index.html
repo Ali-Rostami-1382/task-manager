@@ -16,8 +16,10 @@
         <span>daymark</span>
       </a>
 
-      <div class="sidebar-label">YOUR SPACE <span>✳</span></div>
-      <nav class="filters" aria-label="Task filters">
+      <div class="sidebar-label">WORKSPACE <span>✳</span></div>
+      <nav class="section-nav" aria-label="Main navigation">
+<button class="section-link active" data-view="dashboard">⌂ <span>Dashboard</span></button><button class="section-link" data-view="analytics">▥ <span>Analytics</span></button><button class="section-link" data-view="leaderboard">♛ <span>Leaderboard</span></button><button class="section-link" data-view="checkin">☀ <span>Daily check-in</span></button><button class="section-link" data-view="calendar">▦ <span>Calendar</span></button></nav>
+<div class="sidebar-label task-nav-label">MY TASKS</div><nav class="filters" aria-label="Task filters">
         <button class="filter-button active" data-filter="all">
           <span class="nav-icon">◫</span><span>All tasks</span><span class="filter-count" id="all-count">0</span>
         </button>
@@ -29,26 +31,22 @@
         </button>
       </nav>
 
-      <div class="sidebar-note">
+      <div class="sidebar-note hidden-note">
         <span class="note-spark">✦</span><span class="note-sticker">TAKE IT EASY</span>
         <p class="note-title">One thing at a time.</p>
         <p class="note-copy">Small steps still move you forward. Keep going.</p>
       </div>
 
-      <div class="sidebar-footer">
-        <span class="avatar">A</span>
-        <div><strong>My workspace</strong><small>Personal tasks</small></div>
-        <span class="footer-dots">•••</span>
-      </div>
+      <nav class="section-nav secondary-nav"><button class="section-link" data-view="profile">☺ <span>My profile</span></button><button class="section-link" data-view="settings">⚙ <span>Settings</span></button><button class="section-link" data-view="contact">✉ <span>Contact us</span></button></nav><div class="sidebar-footer"><span class="avatar" id="sidebar-avatar">A</span><div><strong id="sidebar-name">Alex Morgan</strong><small id="sidebar-role">Team member</small></div></div>
     </aside>
 
     <main class="main-content">
       <header class="topbar">
         <div class="breadcrumb"><span>Workspace</span><span class="slash">/</span><strong>Tasks</strong></div>
-        <div class="topbar-right"><span class="today-label" id="today-label"></span><span class="profile-dot">A</span></div>
+        <div class="topbar-right"><span class="today-label" id="today-label"></span><button class="theme-toggle" id="theme-toggle">☾ <span>Dark mode</span></button><button class="profile-dot" data-view="profile">A</button></div>
       </header>
 
-      <section class="page-heading">
+      <section class="view-section active-view" data-section="dashboard"><section class="page-heading compact-heading">
         <div>
           <p class="eyebrow"><span class="eyebrow-spark">✳</span> YOUR DAY, YOUR PACE</p>
           <h1>Big ideas.<br><span>Little steps.</span></h1>
@@ -118,7 +116,13 @@
         <div class="panel-footer"><span id="footer-count">0 tasks</span><span><span class="status-dot"></span> Saved on this device</span></div>
       </section>
 
-      <footer class="page-footer"><span class="footer-star">✳</span> Made for your kind of productive. <span>✷</span></footer>
+      <section class="view-section" data-section="analytics"><div class="section-title-row"><div><p class="eyebrow">THE BIG PICTURE</p><h1>Analytics <span>at a glance.</span></h1></div></div><div class="metric-grid"><article class="metric-card"><span>Total tasks</span><strong id="metric-total">0</strong></article><article class="metric-card peach"><span>Completed</span><strong id="metric-completed">0</strong></article><article class="metric-card mint"><span>Completion rate</span><strong id="metric-rate">0%</strong></article><article class="metric-card pink"><span>In progress</span><strong id="metric-active">0</strong></article></div><div class="content-card"><h2>Task breakdown</h2><div class="bar-row"><span>Completed</span><div class="bar-track"><i id="analytics-completed-bar"></i></div><strong id="analytics-completed-count">0</strong></div><div class="bar-row"><span>In progress</span><div class="bar-track"><i id="analytics-active-bar"></i></div><strong id="analytics-active-count">0</strong></div><p class="analytics-footnote">Calculated locally from your saved tasks.</p></div></section>
+<section class="view-section" data-section="leaderboard"><div class="section-title-row"><div><p class="eyebrow">FRIENDLY COMPETITION</p><h1>Team <span>leaderboard.</span></h1></div><span class="demo-label">SAMPLE DATA</span></div><div class="content-card"><h2>Top task finishers</h2><div id="leaderboard-list" class="leaderboard-list"></div><p class="analytics-footnote">Sample employees for this front-end demo. Real rankings need shared accounts and a database.</p></div></section>
+<section class="view-section" data-section="checkin"><div class="section-title-row"><div><p class="eyebrow">START WITH YOURSELF</p><h1>Daily <span>check-in.</span></h1></div></div><div class="content-card checkin-card"><h2>How are you feeling today?</h2><div class="mood-picker"><button type="button" data-mood="great">😄<span>Great</span></button><button type="button" data-mood="good">🙂<span>Good</span></button><button type="button" data-mood="okay">😐<span>Okay</span></button><button type="button" data-mood="low">😮‍💨<span>Low energy</span></button></div><label for="daily-intention">Today's intention</label><textarea id="daily-intention" rows="3" placeholder="One thing I want to focus on…"></textarea><button class="primary-button" id="save-checkin">Save check-in</button><p id="checkin-feedback" class="inline-feedback"></p></div></section>
+<section class="view-section" data-section="calendar"><div class="section-title-row"><div><p class="eyebrow">MAKE TIME FOR WHAT MATTERS</p><h1>Your <span>calendar.</span></h1></div></div><div class="content-card calendar-card"><div class="calendar-head"><button class="secondary-button" id="calendar-prev">←</button><h2 id="calendar-month">Month</h2><button class="secondary-button" id="calendar-next">→</button></div><div id="calendar-grid" class="calendar-grid"></div><div class="calendar-agenda"><h3 id="agenda-title">Tasks for today</h3><div id="calendar-agenda-list"></div></div></div></section>
+<section class="view-section" data-section="profile"><div class="section-title-row"><div><p class="eyebrow">THIS IS YOUR SPACE</p><h1>My <span>profile.</span></h1></div></div><form class="content-card settings-form" id="profile-form"><div class="profile-hero"><span id="profile-large" class="profile-large">A</span><div><h2 id="profile-display-name">Alex Morgan</h2><p id="profile-display-role">Team member</p></div></div><label for="profile-name">Display name</label><input id="profile-name" maxlength="60" value="Alex Morgan" required><label for="profile-role">Role</label><select id="profile-role"><option>Team member</option><option>Teacher</option><option>Student</option><option>Manager</option><option>Designer</option><option>Developer</option><option>Team lead</option><option>Other</option></select><label for="profile-bio">About you</label><textarea id="profile-bio" rows="3" maxlength="240"></textarea><button class="primary-button" type="submit">Save profile</button><p id="profile-feedback" class="inline-feedback"></p></form></section>
+<section class="view-section" data-section="settings"><div class="section-title-row"><div><p class="eyebrow">MAKE IT YOURS</p><h1>App <span>settings.</span></h1></div></div><form class="content-card settings-form" id="settings-form"><div class="setting-row"><div><strong>Color theme</strong><small>Light or dark workspace</small></div><select id="setting-theme"><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="setting-row"><div><strong>Compact layout</strong><small>Fit more content on screen</small></div><label class="switch"><input id="setting-compact" type="checkbox"><span></span></label></div><div class="setting-row"><div><strong>Task animations</strong><small>Subtle movement on updates</small></div><label class="switch"><input id="setting-motion" type="checkbox" checked><span></span></label></div><div class="setting-row"><div><strong>Weekly reminder</strong><small>Reminder to review your week</small></div><label class="switch"><input id="setting-reminder" type="checkbox"><span></span></label></div><button class="primary-button" type="submit">Save settings</button><p id="settings-feedback" class="inline-feedback"></p></form></section>
+<section class="view-section" data-section="contact"><div class="section-title-row"><div><p class="eyebrow">WE'D LOVE TO HEAR FROM YOU</p><h1>Contact <span>us!</span></h1></div></div><form class="content-card settings-form" id="contact-form"><label for="contact-name">Your name</label><input id="contact-name" maxlength="80" required placeholder="Name"><label for="contact-email">Email address</label><input id="contact-email" type="email" required placeholder="you@example.com"><label for="contact-topic">Topic</label><select id="contact-topic"><option>Feedback</option><option>Feature request</option><option>Bug report</option><option>Just saying hello</option></select><label for="contact-message">Message</label><textarea id="contact-message" rows="4" required maxlength="1200" placeholder="What's on your mind?"></textarea><button class="primary-button" type="submit">Prepare message ↗</button><p id="contact-feedback" class="inline-feedback">This demo prepares an email; it does not send to a server.</p></form></section><footer class="page-footer"><span class="footer-star">✳</span> Made for your kind of productive. <span>✷</span></footer>
     </main>
   </div>
   <script src="app.js"></script>
