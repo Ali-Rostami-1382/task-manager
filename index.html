@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#111827">
-  <meta name="description" content="A simple, thoughtful task manager for keeping everyday work moving.">
+  <meta name="theme-color" content="#fff7ef">
+  <meta name="description" content="Daymark — a colorful, playful space to plan tasks, celebrate progress, and make room for good work.">
   <title>Daymark — Task Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -16,7 +16,7 @@
         <span>daymark</span>
       </a>
 
-      <div class="sidebar-label">WORKSPACE</div>
+      <div class="sidebar-label">YOUR SPACE <span>✳</span></div>
       <nav class="filters" aria-label="Task filters">
         <button class="filter-button active" data-filter="all">
           <span class="nav-icon">◫</span><span>All tasks</span><span class="filter-count" id="all-count">0</span>
@@ -30,7 +30,7 @@
       </nav>
 
       <div class="sidebar-note">
-        <span class="note-spark">✦</span>
+        <span class="note-spark">✦</span><span class="note-sticker">TAKE IT EASY</span>
         <p class="note-title">One thing at a time.</p>
         <p class="note-copy">Small steps still move you forward. Keep going.</p>
       </div>
@@ -50,11 +50,11 @@
 
       <section class="page-heading">
         <div>
-          <p class="eyebrow">YOUR DAY, YOUR PACE</p>
-          <h1>Make room for <span>good work.</span></h1>
-          <p class="page-subtitle">A little structure can make a big difference.</p>
+          <p class="eyebrow"><span class="eyebrow-spark">✳</span> YOUR DAY, YOUR PACE</p>
+          <h1>Big ideas.<br><span>Little steps.</span></h1>
+          <p class="page-subtitle">Your plans, your pace. Let’s make today count <span>✷</span></p>
         </div>
-        <div class="progress-card">
+        <div class="progress-card"><div class="progress-sticker" aria-hidden="true">✷</div>
           <div class="progress-top"><span>Daily progress</span><strong id="progress-label">0%</strong></div>
           <div class="progress-track"><span id="progress-bar"></span></div>
           <small id="progress-copy">You're just getting started.</small>
@@ -62,7 +62,7 @@
       </section>
 
       <section class="task-panel">
-        <div class="panel-heading">
+        <div class="panel-heading"><div class="panel-heading-accent" aria-hidden="true"></div>
           <div>
             <h2 id="list-title">All tasks <span id="heading-count">0</span></h2>
             <p>Keep the next step clear and manageable.</p>
@@ -110,7 +110,7 @@
 
         <div class="task-list" id="task-list" aria-live="polite"></div>
         <div class="empty-state" id="empty-state">
-          <div class="empty-icon">✦</div>
+          <div class="empty-icon">✳</div>
           <h3>No tasks here yet</h3>
           <p>Add something you want to get done. You can start small.</p>
           <button class="secondary-button" id="empty-add-button">Create your first task</button>
@@ -118,7 +118,7 @@
         <div class="panel-footer"><span id="footer-count">0 tasks</span><span><span class="status-dot"></span> Saved on this device</span></div>
       </section>
 
-      <footer class="page-footer">Made for calmer, more focused days <span>✳</span></footer>
+      <footer class="page-footer"><span class="footer-star">✳</span> Made for your kind of productive. <span>✷</span></footer>
     </main>
   </div>
   <script src="app.js"></script>
