@@ -243,6 +243,11 @@ function updateAnalytics() {
  [["metric-total",tasks.length],["metric-completed",done],["metric-rate",rate+"%"],["metric-active",active],["analytics-completed-count",done],["analytics-active-count",active]].forEach(([id,v])=>{const n=document.getElementById(id);if(n)n.textContent=v;});
  document.querySelector("#analytics-completed-bar").style.width=rate+"%";
  document.querySelector("#analytics-active-bar").style.width=(tasks.length?Math.round(active/tasks.length*100):0)+"%";
+ const overdue=tasks.filter(t=>!t.completed&&t.dueDate&&new Date(t.dueDate+"T00:00:00")<new Date(new Date().toDateString())).length;
+ const high=tasks.filter(t=>!t.completed&&t.priority==="high").length;
+ const focus=document.querySelector("#analytics-insight"), next=document.querySelector("#analytics-next-step");
+ if(focus) focus.textContent=!tasks.length?"Add your first task to see a personal workload summary.":overdue?overdue+" task"+(overdue===1?" is":"s are")+" past the due date. Review the deadline and choose what to tackle first.":high?high+" high-priority task"+(high===1?" is":"s are")+" waiting. Consider starting with one of those.":rate===100?"Everything is complete — enjoy the breathing room or add your next goal.":rate>=60?"You have completed "+rate+"% of your tasks. Keep your momentum going.":"You have "+active+" open task"+(active===1?"":"s")+" and "+done+" completed. Small, steady progress counts.";
+ if(next) next.textContent=!tasks.length?"Create a task with a clear title and, if useful, a due date.":overdue?"Check overdue tasks and update their dates or mark finished work complete.":high?"Start with a high-priority task and break it into a manageable next step.":active?"Pick the most useful open task and make a little progress on it.":"Set one new goal for the next work session.";
 }
 function dateKey(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");}
 function renderCalendar(){
