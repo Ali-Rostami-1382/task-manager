@@ -163,7 +163,7 @@ function renderTasks() {
   else if (progress > 0) progressCopy = "Keep going — you're getting there.";
   document.querySelector("#progress-copy").textContent = progressCopy;
 
-  const titles = { all: "All tasks", active: "In progress", completed: "Completed" };
+  updateAnalytics();\n  renderCalendar();\n  const titles = { all: "All tasks", active: "In progress", completed: "Completed" };
   document.querySelector("#list-title").childNodes[0].textContent = `${titles[currentFilter]} `;
 }
 
@@ -228,3 +228,65 @@ document.querySelector("#today-label").textContent = new Intl.DateTimeFormat(und
 }).format(new Date());
 
 renderTasks();
+
+const SETTINGS_KEY = "daymark-settings";
+const PROFILE_KEY = "daymark-profile";
+const CHECKIN_KEY = "daymark-checkin";
+function readObject(key, fallback) { try { return Object.assign({}, fallback, JSON.parse(localStorage.getItem(key) || "{}")); } catch { return Object.assign({}, fallback); } }
+function writeObject(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+let settings = readObject(SETTINGS_KEY, {theme:"light",compact:false,motion:true,reminder:false});
+let profile = readObject(PROFILE_KEY, {name:"Alex Morgan",role:"Team member",bio:""});
+let checkin = readObject(CHECKIN_KEY, {date:"",mood:"",intention:""});
+let calendarDate = new Date(), selectedCalendarDate = new Date();
+function updateAnalytics() {
+ const done=tasks.filter(t=>t.completed).length, active=tasks.length-done, rate=tasks.length?Math.round(done/tasks.length*100):0;
+ [["metric-total",tasks.length],["metric-completed",done],["metric-rate",rate+"%"],["metric-active",active],["analytics-completed-count",done],["analytics-active-count",active]].forEach(([id,v])=>{const n=document.getElementById(id);if(n)n.textContent=v;});
+ document.querySelector("#analytics-completed-bar").style.width=rate+"%";
+ document.querySelector("#analytics-active-bar").style.width=(tasks.length?Math.round(active/tasks.length*100):0)+"%";
+}
+function dateKey(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");}
+function renderCalendar(){
+ const grid=document.querySelector("#calendar-grid"); if(!grid)return; grid.innerHTML="";
+ document.querySelector("#calendar-month").textContent=new Intl.DateTimeFormat(undefined,{month:"long",year:"numeric"}).format(calendarDate);
+ ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].forEach(day=>{const n=document.createElement("div");n.className="calendar-weekday";n.textContent=day;grid.append(n);});
+ const first=new Date(calendarDate.getFullYear(),calendarDate.getMonth(),1), offset=(first.getDay()+6)%7, start=new Date(first);start.setDate(first.getDate()-offset);
+ for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);const key=dateKey(d), dayTasks=tasks.filter(t=>t.dueDate===key), b=document.createElement("button");b.type="button";b.className="calendar-day"+(d.getMonth()!==calendarDate.getMonth()?" muted-day":"")+(key===dateKey(new Date())?" today":"")+(key===dateKey(selectedCalendarDate)?" selected-day":"");b.textContent=d.getDate();b.setAttribute("aria-label",new Intl.DateTimeFormat(undefined,{dateStyle:"full"}).format(d));if(dayTasks.length){const dot=document.createElement("i");dot.className="event-dot";b.append(dot);}b.addEventListener("click",()=>{selectedCalendarDate=d;renderCalendar();});grid.append(b);}
+ const key=dateKey(selectedCalendarDate);document.querySelector("#agenda-title").textContent="Tasks for "+new Intl.DateTimeFormat(undefined,{month:"short",day:"numeric"}).format(selectedCalendarDate);
+ const agenda=document.querySelector("#calendar-agenda-list");agenda.innerHTML="";const dayTasks=tasks.filter(t=>t.dueDate===key);
+ if(!dayTasks.length){const n=document.createElement("p");n.className="agenda-empty";n.textContent="No tasks due on this day. A little breathing room!";agenda.append(n);}
+ dayTasks.forEach(t=>{const n=document.createElement("div");n.className="agenda-item";n.textContent=(t.completed?"✓ ":"○ ")+t.title+" · "+t.priority;agenda.append(n);});
+}
+function renderProfile(){
+ const name=profile.name||"Alex Morgan",role=profile.role||"Team member",initial=name.trim().charAt(0).toUpperCase()||"A";
+ ["sidebar-name","profile-display-name"].forEach(id=>document.getElementById(id).textContent=name);
+ ["sidebar-role","profile-display-role"].forEach(id=>document.getElementById(id).textContent=role);
+ ["sidebar-avatar","profile-large"].forEach(id=>document.getElementById(id).textContent=initial);
+ document.querySelector(".profile-dot").textContent=initial;
+ document.querySelector("#profile-name").value=name;document.querySelector("#profile-role").value=role;document.querySelector("#profile-bio").value=profile.bio||"";
+}
+function applySettings(){
+ document.body.classList.toggle("dark-mode",settings.theme==="dark");document.body.classList.toggle("compact-mode",!!settings.compact);document.body.classList.toggle("reduce-motion",!settings.motion);
+ document.querySelector("#theme-toggle").innerHTML=settings.theme==="dark"?"☀ <span>Light mode</span>":"☾ <span>Dark mode</span>";
+ document.querySelector("#setting-theme").value=settings.theme;document.querySelector("#setting-compact").checked=!!settings.compact;document.querySelector("#setting-motion").checked=!!settings.motion;document.querySelector("#setting-reminder").checked=!!settings.reminder;
+}
+function showView(view){
+ document.querySelectorAll("[data-section]").forEach(s=>s.classList.toggle("active-view",s.dataset.section===view));
+ document.querySelectorAll(".section-link").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+ const names={dashboard:"Tasks",analytics:"Analytics",leaderboard:"Leaderboard",checkin:"Daily check-in",calendar:"Calendar",profile:"My profile",settings:"Settings",contact:"Contact us"};
+ document.querySelector(".breadcrumb strong").textContent=names[view]||"Tasks";if(view==="calendar")renderCalendar();
+}
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
+document.querySelector("#theme-toggle").addEventListener("click",()=>{settings.theme=settings.theme==="dark"?"light":"dark";writeObject(SETTINGS_KEY,settings);applySettings();});
+document.querySelector("#setting-theme").addEventListener("change",e=>{settings.theme=e.target.value;applySettings();});
+document.querySelector("#settings-form").addEventListener("submit",e=>{e.preventDefault();settings={theme:document.querySelector("#setting-theme").value,compact:document.querySelector("#setting-compact").checked,motion:document.querySelector("#setting-motion").checked,reminder:document.querySelector("#setting-reminder").checked};writeObject(SETTINGS_KEY,settings);applySettings();document.querySelector("#settings-feedback").textContent="Settings saved on this device.";});
+document.querySelector("#profile-form").addEventListener("submit",e=>{e.preventDefault();profile={name:document.querySelector("#profile-name").value.trim()||"Alex Morgan",role:document.querySelector("#profile-role").value,bio:document.querySelector("#profile-bio").value.trim()};writeObject(PROFILE_KEY,profile);renderProfile();document.querySelector("#profile-feedback").textContent="Profile saved on this device.";});
+document.querySelectorAll("[data-mood]").forEach(b=>b.addEventListener("click",()=>{checkin.mood=b.dataset.mood;document.querySelectorAll("[data-mood]").forEach(x=>x.classList.toggle("selected",x===b));}));
+document.querySelector("#daily-intention").value=checkin.date===dateKey(new Date())?checkin.intention||"":"";
+if(checkin.date===dateKey(new Date())&&checkin.mood)document.querySelector('[data-mood="'+checkin.mood+'"]')?.classList.add("selected");
+document.querySelector("#save-checkin").addEventListener("click",()=>{checkin={date:dateKey(new Date()),mood:checkin.mood,intention:document.querySelector("#daily-intention").value.trim()};writeObject(CHECKIN_KEY,checkin);document.querySelector("#checkin-feedback").textContent="Check-in saved on this device. Nice job showing up for yourself!";});
+document.querySelector("#calendar-prev").addEventListener("click",()=>{calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()-1,1);renderCalendar();});
+document.querySelector("#calendar-next").addEventListener("click",()=>{calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+1,1);renderCalendar();});
+document.querySelector("#contact-form").addEventListener("submit",e=>{e.preventDefault();const subject=encodeURIComponent("Daymark: "+document.querySelector("#contact-topic").value),body=encodeURIComponent("From: "+document.querySelector("#contact-name").value+" ("+document.querySelector("#contact-email").value+")\n\n"+document.querySelector("#contact-message").value);document.querySelector("#contact-feedback").textContent="Opening your email app to prepare the message…";window.location.href="mailto:ali.rostami1382.8550@gmail.com?subject="+subject+"&body="+body;});
+const demoEmployees=[{name:"Maya Chen",role:"Design",count:42},{name:"Noah Williams",role:"Engineering",count:37},{name:"Sofia Patel",role:"Operations",count:31},{name:"Leo Martin",role:"Marketing",count:26},{name:"Amir Hassan",role:"Research",count:19}];
+document.querySelector("#leaderboard-list").innerHTML=demoEmployees.map((p,i)=>'<div class="leader-row"><span class="leader-rank">'+(i+1)+'</span><div class="leader-person"><strong>'+p.name+'</strong><small>'+p.role+'</small></div><span class="leader-score">'+p.count+' tasks</span></div>').join("");
+renderProfile();applySettings();
